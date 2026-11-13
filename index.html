@@ -1,0 +1,1728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recuperación Académica II Trimestre - Matemática 2do BGU</title>
+  <style>
+    :root {
+      --primary: #0f3d68;
+      --primary-light: #1d5fa3;
+      --accent: #0ea5e9;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --warning: #b45309;
+      --warning-bg: #fef3c7;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Fracciones Matemáticas Nativas (No requieren librerías externas) */
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 4px;
+      font-weight: 600;
+    }
+    .frac > span:first-child {
+      border-bottom: 1.8px solid currentColor;
+      padding: 0 4px 1px;
+      line-height: 1.15;
+    }
+    .frac > span:last-child {
+      padding: 1px 4px 0;
+      line-height: 1.15;
+    }
+
+    /* Encabezado Institucional */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #fff;
+      padding: 1.25rem 2rem;
+      box-shadow: 0 4px 12px rgba(15, 61, 104, 0.2);
+    }
+
+    .header-container {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .header-title p {
+      font-size: 0.88rem;
+      opacity: 0.92;
+      margin-top: 2px;
+    }
+
+    .btn-teacher {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      color: #fff;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+    .btn-teacher:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    /* Barra de Progreso de Ruta */
+    .stepper {
+      max-width: 1120px;
+      margin: 1.25rem auto 0;
+      padding: 0 1rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+
+    .step-pill {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      transition: 0.25s;
+    }
+
+    .step-pill.active {
+      border-color: var(--primary-light);
+      color: var(--primary);
+      background: #eff6ff;
+      box-shadow: 0 2px 8px rgba(29, 95, 163, 0.12);
+    }
+
+    .step-pill.done {
+      border-color: var(--success);
+      color: var(--success);
+      background: #f0fdf4;
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--border);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      flex-shrink: 0;
+    }
+    .step-pill.active .step-num { background: var(--primary-light); }
+    .step-pill.done .step-num { background: var(--success); }
+
+    /* Contenedor Principal */
+    main {
+      max-width: 1120px;
+      margin: 1.25rem auto 3rem;
+      padding: 0 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 1.5rem;
+    }
+
+    .hidden { display: none !important; }
+
+    h2.section-title {
+      color: var(--primary);
+      font-size: 1.35rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.6rem;
+      margin-bottom: 1.1rem;
+    }
+
+    h3.topic-title {
+      color: var(--primary-light);
+      font-size: 1.15rem;
+      margin-bottom: 0.7rem;
+    }
+
+    /* Formularios */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-light);
+    }
+
+    /* Botones */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.7rem 1.35rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--primary-light); }
+
+    .btn-success {
+      background: var(--success);
+      color: #fff;
+    }
+    .btn-success:hover { background: #166534; }
+
+    .btn-outline {
+      background: #fff;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline:hover { background: #eff6ff; }
+
+    /* Alertas */
+    .alert {
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      font-size: 0.94rem;
+      border-left: 4px solid;
+    }
+    .alert-info { background: #eff6ff; border-color: var(--primary-light); color: #1e3a8a; }
+    .alert-success { background: var(--success-bg); border-color: var(--success); color: #14532d; }
+    .alert-danger { background: var(--danger-bg); border-color: var(--danger); color: #7f1d1d; }
+    .alert-warning { background: var(--warning-bg); border-color: var(--warning); color: #78350f; }
+
+    /* Clases Detalladas */
+    .lesson-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .lesson-tab {
+      padding: 0.55rem 0.95rem;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #f8fafc;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .lesson-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .lesson-tab.completed {
+      border-color: var(--success);
+      color: var(--success);
+      background: #f0fdf4;
+    }
+    .lesson-tab.active.completed {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .theory-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .theory-box ul {
+      margin-left: 1.3rem;
+      margin-top: 0.5rem;
+    }
+    .theory-box li { margin-bottom: 0.45rem; }
+
+    .example-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 1.15rem;
+      margin: 1rem 0;
+    }
+
+    .canvas-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    canvas {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .sim-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.8rem;
+      padding: 0.65rem 1rem;
+      background: #f1f5f9;
+      border-radius: 8px;
+      width: 100%;
+    }
+
+    /* Preguntas y Opciones */
+    .question-block {
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+      background: #fff;
+    }
+
+    .q-badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.85rem;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.7rem 0.95rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.15s;
+      background: #fafafa;
+    }
+
+    .option-label:hover {
+      border-color: var(--primary-light);
+      background: #f0f9ff;
+    }
+
+    .option-label input[type="radio"] {
+      accent-color: var(--primary);
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+
+    .option-correct {
+      background: var(--success-bg) !important;
+      border-color: var(--success) !important;
+      color: #14532d;
+      font-weight: 600;
+    }
+
+    .option-wrong {
+      background: var(--danger-bg) !important;
+      border-color: var(--danger) !important;
+      color: #7f1d1d;
+    }
+
+    /* Modal Configuración Docente */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 1rem;
+    }
+
+    .modal-box {
+      background: #fff;
+      max-width: 580px;
+      width: 100%;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    .score-banner {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+    }
+
+    .score-big {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    @media (max-width: 768px) {
+      .stepper { grid-template-columns: 1fr 1fr; }
+    }
+    @media print {
+      header .btn-teacher, .stepper, .no-print { display: none !important; }
+      .card { box-shadow: none; border: 1px solid #999; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="header-title">
+      <h1>📐 PLAN DE RECUPERACIÓN ACADÉMICA — II TRIMESTRE</h1>
+      <p>Asignatura: Matemática | Nivel: 2do Año BGU | Docente: Msc. Edwin Lliguipuma E.</p>
+    </div>
+    <button class="btn-teacher no-print" onclick="abrirConfigDocente()">🟢 Excel Drive Conectado</button>
+  </div>
+</header>
+
+<!-- Barra de progreso -->
+<div class="stepper no-print">
+  <div class="step-pill active" id="pill-0"><span class="step-num">1</span> Verificación Nota</div>
+  <div class="step-pill" id="pill-1"><span class="step-num">2</span> Clase Guiada (5 Temas)</div>
+  <div class="step-pill" id="pill-2"><span class="step-num">3</span> Tarea (5 Preguntas)</div>
+  <div class="step-pill" id="pill-3"><span class="step-num">4</span> Examen Final (10 Preg.)</div>
+</div>
+
+<main>
+  <!-- ==================== FASE 0: REGISTRO Y VALIDACIÓN DE NOTA ==================== -->
+  <section id="sec-registro" class="card">
+    <h2 class="section-title">1. Identificación del Estudiante y Validación de Calificación</h2>
+    <p>Este simulador pedagógico está habilitado exclusivamente para los estudiantes de <strong>Segundo Año de Bachillerato</strong> que obtuvieron una calificación <strong>menor a 7.00 puntos</strong> en el Examen del II Trimestre.</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="estNombre">Apellidos y Nombres Completos *</label>
+        <input type="text" id="estNombre" placeholder="Ej. Pérez Gómez Juan Carlos" required />
+      </div>
+      <div class="form-group">
+        <label for="estParalelo">Especialidad y Paralelo *</label>
+        <select id="estParalelo">
+          <option value="">-- Seleccione su curso --</option>
+          <option value="2do Informática A">2do Bachillerato - Informática “A”</option>
+          <option value="2do Informática B">2do Bachillerato - Informática “B”</option>
+          <option value="2do Informática C">2do Bachillerato - Informática “C”</option>
+          <option value="2do Contabilidad A">2do Bachillerato - Contabilidad “A”</option>
+          <option value="2do Contabilidad B">2do Bachillerato - Contabilidad “B”</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="estNota">Nota obtenida en el Examen II Trimestre (0 a 10) *</label>
+        <input type="number" id="estNota" step="0.01" min="0" max="10" placeholder="Ej. 5.50" required />
+      </div>
+    </div>
+
+    <div id="registro-alerta"></div>
+
+    <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+      <button class="btn btn-primary" onclick="validarIngreso()">Validar Nota e Iniciar Ruta Guiada →</button>
+    </div>
+  </section>
+
+  <!-- ==================== FASE 1: CLASE MAGISTRAL DETALLADA (5 TEMAS) ==================== -->
+  <section id="sec-clases" class="card hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+      <h2 class="section-title" style="border:none; margin:0;">2. Aula Virtual Guiada: Contenidos del II Trimestre</h2>
+      <span id="badge-estudiante" style="font-size:0.88rem; font-weight:600; color:var(--primary); background:#eff6ff; padding:0.35rem 0.75rem; border-radius:20px;"></span>
+    </div>
+    <p style="margin-bottom:1rem; color:var(--muted);">Estudia cada tema con su explicación analítica, observa los gráficos interactivos y responde la pregunta de verificación de cada clase para habilitar la Tarea de Refuerzo.</p>
+
+    <div class="lesson-tabs" id="lesson-tabs">
+      <button class="lesson-tab active" onclick="mostrarClase(0)" id="tab-0">Tema 1: Clasificación de Funciones</button>
+      <button class="lesson-tab" onclick="mostrarClase(1)" id="tab-1">Tema 2: Asíntotas Racionales</button>
+      <button class="lesson-tab" onclick="mostrarClase(2)" id="tab-2">Tema 3: Fracciones Parciales</button>
+      <button class="lesson-tab" onclick="mostrarClase(3)" id="tab-3">Tema 4: Suma/Resta Racional</button>
+      <button class="lesson-tab" onclick="mostrarClase(4)" id="tab-4">Tema 5: Funciones Trigonométricas</button>
+    </div>
+
+    <!-- CONTENIDO DE LAS 5 CLASES -->
+    <div id="lesson-content"></div>
+
+    <div style="margin-top: 1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; border-top:1px solid #e2e8f0; padding-top:1rem;">
+      <div id="progreso-clases-txt" style="font-weight:600; color:var(--primary);">Progreso de clases: 0 / 5 verificadas</div>
+      <button class="btn btn-success" id="btn-ir-tarea" onclick="irATarea()">Continuar a la Tarea de 5 Preguntas →</button>
+    </div>
+  </section>
+
+  <!-- ==================== FASE 2: TAREA DE REFUERZO (5 PREGUNTAS) ==================== -->
+  <section id="sec-tarea" class="card hidden">
+    <h2 class="section-title">3. Tarea de Refuerzo Pedagógico (5 Preguntas Guiadas)</h2>
+    <div class="alert alert-info">
+      <strong>Instrucciones de la Tarea:</strong> Resuelve estos 5 ejercicios de entrenamiento (1 por cada tema evaluado en el II Trimestre). Al calificar la tarea recibirás la explicación paso a paso de cada ejercicio antes de pasar a tu Evaluación Final de Recuperación.
+    </div>
+
+    <div id="tarea-container"></div>
+
+    <div id="tarea-resultado"></div>
+
+    <div style="margin-top:1.25rem; display:flex; gap:0.8rem; flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="volverAClases()">← Repasar Clases</button>
+      <button class="btn btn-primary" id="btn-calificar-tarea" onclick="calificarTarea()">Calificar Tarea de 5 Preguntas</button>
+      <button class="btn btn-success hidden" id="btn-ir-examen" onclick="irAExamen()">Iniciar Evaluación Final (10 Preguntas) →</button>
+    </div>
+  </section>
+
+  <!-- ==================== FASE 3: EVALUACIÓN FINAL (10 PREGUNTAS) ==================== -->
+  <section id="sec-examen" class="card hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+      <h2 class="section-title" style="border:none; margin:0;">4. Evaluación Final de Recuperación (10 Preguntas)</h2>
+      <span style="background:#fef3c7; color:#92400e; font-weight:700; padding:0.35rem 0.8rem; border-radius:8px; font-size:0.88rem;">Valor: 1 punto c/u (Total: 10 pts)</span>
+    </div>
+    <p style="margin-bottom:1.2rem; color:var(--muted);">Selecciona la alternativa correcta en cada una de las 10 preguntas. Al finalizar, tu nota se enviará automáticamente a la hoja de cálculo de Google Drive del docente.</p>
+
+    <div id="examen-container"></div>
+
+    <div style="margin-top:1.5rem; text-align:center;" class="no-print">
+      <button class="btn btn-success" style="font-size:1.05rem; padding:0.85rem 2rem;" id="btn-enviar-examen" onclick="finalizarYEnviarExamen()">✅ Finalizar Evaluación y Enviar Nota a Drive</button>
+    </div>
+
+    <!-- REPORTE FINAL Y COMPROBANTE -->
+    <div id="examen-reporte" class="hidden" style="margin-top:1.5rem;"></div>
+  </section>
+</main>
+
+<!-- MODAL DE CONFIGURACIÓN PARA EL DOCENTE (URL GOOGLE APPS SCRIPT) -->
+<div id="modal-docente" class="modal-backdrop hidden">
+  <div class="modal-box">
+    <h3 style="color:var(--primary); margin-bottom:0.5rem;">🟢 Conexión Activa con Google Drive (Excel)</h3>
+    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:1rem;">
+      Tu enlace de <strong>Google Apps Script</strong> ya está integrado por defecto en este archivo. Puedes realizar un envío de prueba para verificar que los registros lleguen a tu hoja de cálculo <em>Notas Recuperacion II Trimestre</em>.
+    </p>
+    <div class="form-group">
+      <label for="inputScriptUrl">URL de Google Apps Script (/exec):</label>
+      <input type="url" id="inputScriptUrl" />
+    </div>
+    <div id="test-drive-status" style="margin-top:0.75rem; font-size:0.88rem;"></div>
+    <div style="margin-top:1.2rem; display:flex; justify-content:flex-end; gap:0.6rem; flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="probarConexionDrive()">📡 Probar Envío</button>
+      <button class="btn btn-primary" onclick="guardarUrlDrive()">Guardar URL</button>
+      <button class="btn" style="background:#e2e8f0;" onclick="cerrarConfigDocente()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /**
+   * ============================================================================
+   * URL VINCULADA A LA HOJA DE RESPUESTAS EN GOOGLE DRIVE (Msc. Edwin Lliguipuma)
+   * ============================================================================
+   */
+  const DEFAULT_GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGvxVxJcdtBUl8BEqpnTBXvRddAU1qaCWze3OueQT0-SlekolztHDSngB_gFS_wBEn/exec";
+
+  function getGoogleScriptUrl() {
+    const saved = localStorage.getItem("edwin_math_script_url");
+    if (saved && saved.startsWith("https://script.google.com/")) return saved;
+    return DEFAULT_GOOGLE_SCRIPT_URL;
+  }
+
+  // Estado Global del Estudiante
+  const state = {
+    nombre: "",
+    paralelo: "",
+    notaOriginal: 0,
+    modoPractica: false,
+    clasesVerificadas: [false, false, false, false, false],
+    notaTarea: 0,
+    tareaCompletada: false,
+    notaExamen: 0,
+    examenEnviado: false
+  };
+
+  /* ============================================================================
+     MOTOR DE GRÁFICOS CARTESIANOS EN HTML5 CANVAS (SIN DEPENDENCIAS EXTERNAS)
+     ============================================================================ */
+  function drawRationalGraph(canvasId, options) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width;
+    const H = canvas.height;
+    const { xMin, xMax, yMin, yMax, fn, vAsymptotes = [], hAsymptote = 0, labelFn = "f(x)" } = options;
+
+    const toPxX = x => ((x - xMin) / (xMax - xMin)) * W;
+    const toPxY = y => H - ((y - yMin) / (yMax - yMin)) * H;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+
+    // Cuadrícula suave
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x++) {
+      const px = toPxX(x);
+      ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, H); ctx.stroke();
+    }
+    for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y++) {
+      const py = toPxY(y);
+      ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(W, py); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Ejes X e Y
+    ctx.strokeStyle = "#334155";
+    ctx.lineWidth = 1.6;
+    if (yMin <= 0 && yMax >= 0) {
+      const y0 = toPxY(0);
+      ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y0); ctx.stroke();
+    }
+    if (xMin <= 0 && xMax >= 0) {
+      const x0 = toPxX(0);
+      ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, H); ctx.stroke();
+    }
+
+    // Etiquetas numéricas
+    ctx.fillStyle = "#475569";
+    ctx.font = "11px Segoe UI, sans-serif";
+    const stepX = (xMax - xMin) > 14 ? 2 : 1;
+    for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x += stepX) {
+      if (x === 0) continue;
+      ctx.fillText(x.toString(), toPxX(x) - 5, toPxY(0) + 14);
+    }
+    for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y += 2) {
+      if (y === 0) continue;
+      ctx.fillText(y.toString(), toPxX(0) + 6, toPxY(y) + 4);
+    }
+
+    // Asíntota Horizontal (Verde)
+    if (hAsymptote !== null) {
+      ctx.strokeStyle = "#16a34a";
+      ctx.lineWidth = 2.2;
+      ctx.setLineDash([8, 5]);
+      const pyH = toPxY(hAsymptote);
+      ctx.beginPath(); ctx.moveTo(0, pyH); ctx.lineTo(W, pyH); ctx.stroke();
+    }
+
+    // Asíntotas Verticales (Rojo)
+    ctx.strokeStyle = "#dc2626";
+    ctx.lineWidth = 2.2;
+    ctx.setLineDash([7, 5]);
+    vAsymptotes.forEach(va => {
+      const pxV = toPxX(va);
+      ctx.beginPath(); ctx.moveTo(pxV, 0); ctx.lineTo(pxV, H); ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // Curva de la función racional
+    ctx.strokeStyle = "#0f4c81";
+    ctx.lineWidth = 2.8;
+    ctx.beginPath();
+    let drawing = false;
+    const steps = 600;
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (i / steps) * (xMax - xMin);
+      const nearAsymp = vAsymptotes.some(va => Math.abs(x - va) < 0.06);
+      if (nearAsymp) {
+        drawing = false;
+        continue;
+      }
+      const y = fn(x);
+      if (!isFinite(y) || y > yMax + 2 || y < yMin - 2) {
+        drawing = false;
+        continue;
+      }
+      const px = toPxX(x);
+      const py = toPxY(y);
+      if (!drawing) {
+        ctx.moveTo(px, py);
+        drawing = true;
+      } else {
+        ctx.lineTo(px, py);
+      }
+    }
+    ctx.stroke();
+
+    // Leyenda superior derecha
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 1;
+    ctx.fillRect(W - 215, 10, 205, 64);
+    ctx.strokeRect(W - 215, 10, 205, 64);
+
+    ctx.font = "bold 11px Segoe UI, sans-serif";
+    ctx.fillStyle = "#0f4c81";
+    ctx.fillText("— Función: " + labelFn, W - 205, 27);
+    ctx.fillStyle = "#dc2626";
+    ctx.fillText("-- A. Vertical: x = " + vAsymptotes.join(", "), W - 205, 45);
+    ctx.fillStyle = "#16a34a";
+    ctx.fillText("-- A. Horizontal: y = " + hAsymptote, W - 205, 63);
+  }
+
+  function drawTrigGraph(canvasId, options) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width;
+    const H = canvas.height;
+    const { amp = 3, freq = 1, type = "sin", yMax = 5 } = options;
+
+    const padL = 42, padR = 20, padT = 24, padB = 34;
+    const plotW = W - padL - padR;
+    const plotH = H - padT - padB;
+    const xMax = 2 * Math.PI;
+    const yMin = -yMax;
+
+    const toPxX = x => padL + (x / xMax) * plotW;
+    const toPxY = y => padT + ((yMax - y) / (yMax - yMin)) * plotH;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+
+    // Cuadrícula
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    const piTicks = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2, 2 * Math.PI];
+    const piLabels = ["0", "π/2", "π", "3π/2", "2π"];
+    piTicks.forEach(t => {
+      const px = toPxX(t);
+      ctx.beginPath(); ctx.moveTo(px, padT); ctx.lineTo(px, padT + plotH); ctx.stroke();
+    });
+    for (let y = -yMax + 1; y <= yMax - 1; y++) {
+      const py = toPxY(y);
+      ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // Ejes
+    ctx.strokeStyle = "#334155";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(padL, toPxY(0)); ctx.lineTo(padL + plotW, toPxY(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + plotH); ctx.stroke();
+
+    // Etiquetas
+    ctx.fillStyle = "#334155";
+    ctx.font = "bold 12px Segoe UI, sans-serif";
+    piTicks.forEach((t, idx) => {
+      ctx.fillText(piLabels[idx], toPxX(t) - 8, padT + plotH + 18);
+    });
+    for (let y = -yMax + 1; y <= yMax - 1; y++) {
+      if (y === 0) continue;
+      ctx.fillText(y.toString(), padL - 22, toPxY(y) + 4);
+    }
+
+    // Líneas Máximo y Mínimo
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = "#dc2626";
+    ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.moveTo(padL, toPxY(amp)); ctx.lineTo(padL + plotW, toPxY(amp)); ctx.stroke();
+
+    ctx.strokeStyle = "#16a34a";
+    ctx.beginPath(); ctx.moveTo(padL, toPxY(-amp)); ctx.lineTo(padL + plotW, toPxY(-amp)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Curva Trigonométrica
+    ctx.strokeStyle = "#0f4c81";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (let i = 0; i <= 400; i++) {
+      const x = (i / 400) * xMax;
+      const y = type === "sin" ? amp * Math.sin(freq * x) : amp * Math.cos(freq * x);
+      const px = toPxX(x);
+      const py = toPxY(y);
+      if (i === 0) ctx.moveTo(px, py);
+      else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Leyenda
+    ctx.fillStyle = "rgba(255,255,255,0.92)";
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.fillRect(W - 190, 12, 175, 56);
+    ctx.strokeRect(W - 190, 12, 175, 56);
+    ctx.font = "bold 11px Segoe UI, sans-serif";
+    ctx.fillStyle = "#0f4c81";
+    ctx.fillText(`f(x) = ${amp}·${type}(${freq === 1 ? "" : freq}x)`, W - 180, 28);
+    ctx.fillStyle = "#dc2626";
+    ctx.fillText(`Máximo = +${amp} | Amplitud = ${amp}`, W - 180, 44);
+    ctx.fillStyle = "#16a34a";
+    ctx.fillText(`Mínimo = -${amp} | T = ${freq === 1 ? "2π" : "π"}`, W - 180, 60);
+  }
+
+  function drawParabolaHorizontalTest(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width, H = canvas.height;
+    const xMin = -4, xMax = 4, yMin = -3, yMax = 6;
+    const toPxX = x => ((x - xMin) / (xMax - xMin)) * W;
+    const toPxY = y => H - ((y - yMin) / (yMax - yMin)) * H;
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+
+    // Cuadrícula
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    for (let x = -3; x <= 3; x++) {
+      ctx.beginPath(); ctx.moveTo(toPxX(x), 0); ctx.lineTo(toPxX(x), H); ctx.stroke();
+    }
+    for (let y = -2; y <= 5; y++) {
+      ctx.beginPath(); ctx.moveTo(0, toPxY(y)); ctx.lineTo(W, toPxY(y)); ctx.stroke();
+    }
+
+    // Ejes
+    ctx.strokeStyle = "#334155";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(0, toPxY(0)); ctx.lineTo(W, toPxY(0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toPxX(0), 0); ctx.lineTo(toPxX(0), H); ctx.stroke();
+
+    // Parábola f(x) = x^2 - 2
+    ctx.strokeStyle = "#0f4c81";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+      const x = xMin + (i / 200) * (xMax - xMin);
+      const y = x * x - 2;
+      if (i === 0) ctx.moveTo(toPxX(x), toPxY(y));
+      else ctx.lineTo(toPxX(x), toPxY(y));
+    }
+    ctx.stroke();
+
+    // Recta Horizontal y = 2
+    ctx.strokeStyle = "#dc2626";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(0, toPxY(2)); ctx.lineTo(W, toPxY(2)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Puntos de corte (-2, 2) y (2, 2)
+    [[-2, 2], [2, 2]].forEach(([px, py]) => {
+      ctx.fillStyle = "#dc2626";
+      ctx.beginPath();
+      ctx.arc(toPxX(px), toPxY(py), 5.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#7f1d1d";
+      ctx.font = "bold 12px Segoe UI, sans-serif";
+      ctx.fillText(`(${px}, ${py})`, toPxX(px) - 18, toPxY(py) - 10);
+    });
+
+    ctx.fillStyle = "#0f4c81";
+    ctx.font = "bold 12px Segoe UI, sans-serif";
+    ctx.fillText("f(x) = x² - 2", 14, 22);
+    ctx.fillStyle = "#dc2626";
+    ctx.fillText("Recta horizontal y = 2 (corta en 2 puntos)", 14, 40);
+  }
+
+  /* ============================================================================
+     FASE 0: VALIDACIÓN DE INGRESO (< 7 PUNTOS)
+     ============================================================================ */
+  function validarIngreso() {
+    const nombre = document.getElementById("estNombre").value.trim();
+    const paralelo = document.getElementById("estParalelo").value;
+    const notaStr = document.getElementById("estNota").value;
+    const nota = parseFloat(notaStr);
+    const alerta = document.getElementById("registro-alerta");
+
+    if (!nombre || !paralelo || isNaN(nota) || nota < 0 || nota > 10) {
+      alerta.innerHTML = `<div class="alert alert-danger">⚠️ Por favor, completa tus <strong>apellidos y nombres</strong>, selecciona tu <strong>paralelo</strong> e ingresa una <strong>calificación válida entre 0.00 y 10.00</strong>.</div>`;
+      return;
+    }
+
+    state.nombre = nombre;
+    state.paralelo = paralelo;
+    state.notaOriginal = nota;
+
+    if (nota >= 7.0) {
+      alerta.innerHTML = `
+        <div class="alert alert-success">
+          <strong>🎉 ¡Felicitaciones, ${nombre}!</strong><br>
+          Tu calificación del II Trimestre es <strong>${nota.toFixed(2)} / 10.00 puntos</strong>, por lo cual <strong>ya tienes aprobado el examen</strong> y NO necesitas rendir la evaluación de recuperación.<br><br>
+          <button class="btn btn-outline" onclick="iniciarModoPractica()">Ingresar solo como Repaso Académico (Sin envío de recuperación)</button>
+        </div>`;
+      return;
+    }
+
+    state.modoPractica = false;
+    alerta.innerHTML = `<div class="alert alert-warning">📌 Calificación registrada: <strong>${nota.toFixed(2)} / 10.00</strong> (Menor a 7.00 puntos). Habilitando ruta obligatoria de recuperación académica...</div>`;
+    setTimeout(() => {
+      activarFase(1);
+    }, 700);
+  }
+
+  function iniciarModoPractica() {
+    state.modoPractica = true;
+    activarFase(1);
+  }
+
+  function activarFase(num) {
+    ["sec-registro", "sec-clases", "sec-tarea", "sec-examen"].forEach((id, idx) => {
+      document.getElementById(id).classList.toggle("hidden", idx !== num);
+      const pill = document.getElementById(`pill-${idx}`);
+      pill.classList.remove("active", "done");
+      if (idx < num) pill.classList.add("done");
+      if (idx === num) pill.classList.add("active");
+    });
+
+    if (num === 1) {
+      document.getElementById("badge-estudiante").textContent = `👤 ${state.nombre} | ${state.paralelo} | Nota II Trim: ${state.notaOriginal.toFixed(2)}`;
+      mostrarClase(0);
+    } else if (num === 2) {
+      renderizarTarea();
+    } else if (num === 3) {
+      renderizarExamen();
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  /* ============================================================================
+     FASE 1: LAS 5 CLASES DETALLADAS + SIMULADORES INTERACTIVOS
+     ============================================================================ */
+  const clasesData = [
+    {
+      titulo: "Tema 1: Clasificación de Funciones (Inyectiva, Sobreyectiva, Biyectiva) y Operaciones",
+      indicador: "Ref. I.M.5.3.1.",
+      teoria: `
+        <div class="theory-box">
+          <h4>1. Clasificación de Funciones Reales (f: A → B)</h4>
+          <ul>
+            <li><strong>Función Inyectiva (Uno a Uno):</strong> A elementos distintos del dominio A les corresponden imágenes distintas en el codominio B. Analíticamente: si <code>x₁ ≠ x₂</code> entonces <code>f(x₁) ≠ f(x₂)</code> (o equivalentemente, si <code>f(x₁) = f(x₂) ⇒ x₁ = x₂</code>).</li>
+            <li><strong>Criterio de la Recta Horizontal:</strong> Una función es inyectiva si y solo si <strong>toda recta horizontal</strong> trazada sobre su gráfica cartesiana corta a la curva en <strong>como máximo un punto</strong>.</li>
+            <li><strong>Función Sobreyectiva:</strong> Cuando el recorrido o rango es igual a todo el conjunto de llegada B (<code>Rec(f) = B</code>); es decir, no sobran elementos en B sin preimagen.</li>
+            <li><strong>Función Biyectiva:</strong> Es aquella que cumple ser <strong>inyectiva y sobreyectiva al mismo tiempo</strong>.</li>
+          </ul>
+          <h4 style="margin-top:0.8rem;">2. Operaciones Algebraicas Básicas con Funciones</h4>
+          <p>Dadas dos funciones reales <code>f(x)</code> y <code>g(x)</code>, la suma y resta se definen término a término reduciendo términos semejantes: <code>(f ± g)(x) = f(x) ± g(x)</code>.</p>
+        </div>
+        <div class="example-box">
+          <strong>✏️ Ejemplo Resuelto Paso a Paso:</strong><br>
+          Sean <code>f(x) = 2x + 3</code> y <code>g(x) = x - 1</code>.<br>
+          1) <strong>Suma:</strong> <code>(f + g)(x) = (2x + 3) + (x - 1) = 3x + 2</code>. Su dominio es todos los números reales <strong>ℝ</strong>.<br>
+          2) <strong>¿Es inyectiva?</strong> Si <code>3x₁ + 2 = 3x₂ + 2 ⇒ 3x₁ = 3x₂ ⇒ x₁ = x₂</code>. ¡Sí es inyectiva y también biyectiva en ℝ!
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="canvas-clase-0" width="540" height="250"></canvas>
+          <small style="color:var(--muted); margin-top:4px;">Gráfica de f(x) = x² - 2: La recta horizontal y = 2 corta en dos puntos (-2,2) y (2,2), demostrando que NO es inyectiva.</small>
+        </div>
+      `,
+      pregunta: "Comprobación Clase 1: Dada la función f(x) = x² definida de ℝ → ℝ, ¿por qué NO es una función inyectiva?",
+      opciones: [
+        "Porque existen valores distintos en el dominio (como x = -2 y x = 2) que producen la misma imagen f(x) = 4.",
+        "Porque su gráfica es una línea recta con pendiente positiva.",
+        "Porque su dominio no incluye a los números negativos."
+      ],
+      correcta: 0,
+      explicacion: "¡Correcto! Como (-2)² = 4 y (2)² = 4, dos elementos distintos del dominio comparten la misma imagen, violando la definición de inyectividad."
+    },
+    {
+      titulo: "Tema 2: Funciones Racionales — Análisis Gráfico y Analítico de Asíntotas",
+      indicador: "Ref. I.M.5.3.3.",
+      teoria: `
+        <div class="theory-box">
+          <h4>¿Cómo hallar las asíntotas de una función racional f(x) = P(x) / Q(x)?</h4>
+          <ul>
+            <li><strong>1. Asíntotas Verticales (AV):</strong> Se obtienen igualando el <strong>denominador a cero</strong> (<code>Q(x) = 0</code>) y resolviendo para <code>x</code> (siempre que esos valores no anulen también el numerador). Representan valores prohibidos del dominio.</li>
+            <li><strong>2. Asíntota Horizontal (AH):</strong> Se compara el grado del numerador (<code>n</code>) con el grado del denominador (<code>m</code>):
+              <br>• Si <strong>n &lt; m</strong> (grado arriba menor que abajo) ⇒ La asíntota horizontal es <strong>y = 0</strong> (el eje X).
+              <br>• Si <strong>n = m</strong> (grados iguales) ⇒ La asíntota horizontal es <strong>y = a / b</strong> (división de coeficientes principales).
+              <br>• Si <strong>n &gt; m</strong> ⇒ No existe asíntota horizontal.
+            </li>
+          </ul>
+        </div>
+        <div class="example-box">
+          <strong>✏️ Ejemplo del Examen:</strong> Analizar <span class="frac"><span>2x + 1</span><span>x² - 4</span></span><br>
+          • <strong>Asíntotas Verticales:</strong> <code>x² - 4 = 0 ⇒ (x - 2)(x + 2) = 0 ⇒ x = 2</code> y <code>x = -2</code>.<br>
+          • <strong>Asíntota Horizontal:</strong> Grado numerador = 1, grado denominador = 2. Como <code>1 &lt; 2</code>, entonces <strong>y = 0</strong>.
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="canvas-clase-1" width="560" height="270"></canvas>
+          <div class="sim-controls">
+            <label for="sliderAsymp"><strong>Simulador Interactivo:</strong> Cambia el parámetro <em>a</em> en f(x) = (2x+1)/(x² - a²): <strong>a = <span id="valAsymp">2</span></strong></label>
+            <input type="range" id="sliderAsymp" min="1" max="4" value="2" step="1" oninput="actualizarSimuladorAsintotas()" />
+          </div>
+        </div>
+      `,
+      pregunta: "Comprobación Clase 2: Para la función racional f(x) = (4x - 1) / (x² - 16), ¿cuáles son sus asíntotas?",
+      opciones: [
+        "Asíntotas verticales en x = 16 y x = -16; Asíntota horizontal en y = 4.",
+        "Asíntotas verticales en x = 4 y x = -4; Asíntota horizontal en y = 0.",
+        "Asíntotas verticales en x = 4 y x = -4; Asíntota horizontal en y = 1."
+      ],
+      correcta: 1,
+      explicacion: "¡Excelente! x² - 16 = 0 da x = ±4 (asíntotas verticales), y como el grado del numerador (1) es menor que el del denominador (2), la asíntota horizontal es y = 0."
+    },
+    {
+      titulo: "Tema 3: Descomposición en Fracciones Parciales",
+      indicador: "Ref. I.M.5.3.3.",
+      teoria: `
+        <div class="theory-box">
+          <h4>Método de Factores Lineales Distintos en el Denominador</h4>
+          <p>Cuando tenemos una fracción propia con factores lineales distintos en el denominador:</p>
+          <p style="margin:0.6rem 0; font-size:1.05rem;">
+            <span class="frac"><span>Px + Q</span><span>(x - r₁)(x - r₂)</span></span> = 
+            <span class="frac"><span>A</span><span>x - r₁</span></span> + 
+            <span class="frac"><span>B</span><span>x - r₂</span></span>
+          </p>
+          <ul>
+            <li><strong>Paso 1:</strong> Multiplicamos toda la ecuación por el denominador común <code>(x - r₁)(x - r₂)</code> para eliminar denominadores: <code>Px + Q = A(x - r₂) + B(x - r₁)</code>.</li>
+            <li><strong>Paso 2 (Método de Raíces o Sistema 2×2):</strong> Sustituimos <code>x = r₁</code> para anular B y despejar <strong>A</strong>; luego sustituimos <code>x = r₂</code> para anular A y despejar <strong>B</strong>.</li>
+          </ul>
+        </div>
+        <div class="example-box">
+          <strong>✏️ Ejemplo Resuelto Paso a Paso:</strong><br>
+          Descomponer <span class="frac"><span>5x + 1</span><span>(x - 1)(x + 2)</span></span> = <span class="frac"><span>A</span><span>x - 1</span></span> + <span class="frac"><span>B</span><span>x + 2</span></span><br>
+          1) Multiplicamos por <code>(x - 1)(x + 2)</code>: &nbsp; <code>5x + 1 = A(x + 2) + B(x - 1)</code><br>
+          2) Evaluamos en <strong>x = 1</strong>: &nbsp; <code>5(1) + 1 = A(1 + 2) + B(0) ⇒ 6 = 3A ⇒ <strong>A = 2</strong></code><br>
+          3) Evaluamos en <strong>x = -2</strong>: &nbsp; <code>5(-2) + 1 = A(0) + B(-2 - 1) ⇒ -9 = -3B ⇒ <strong>B = 3</strong></code>
+        </div>
+      `,
+      pregunta: "Comprobación Clase 3: Al descomponer (4x + 4) / [(x - 1)(x + 3)] = A/(x - 1) + B/(x + 3), ¿cuánto valen A y B?",
+      opciones: [
+        "A = 2 y B = 2",
+        "A = 4 y B = 1",
+        "A = -2 y B = 2"
+      ],
+      correcta: 0,
+      explicacion: "¡Muy bien! Al evaluar x = 1: 4(1)+4 = A(4) ⇒ 8 = 4A ⇒ A = 2. Al evaluar x = -3: 4(-3)+4 = B(-4) ⇒ -8 = -4B ⇒ B = 2."
+    },
+    {
+      titulo: "Tema 4: Suma, Resta y Simplificación de Funciones Racionales",
+      indicador: "Ref. I.M.5.3.3.",
+      teoria: `
+        <div class="theory-box">
+          <h4>Procedimiento Algebraico para Sumar o Restar Fracciones Racionales</h4>
+          <ul>
+            <li><strong>Paso 1:</strong> Hallar el Mínimo Común Múltiplo (m.c.m.) de los denominadores. Si son factores primos entre sí, el m.c.m. es su producto <code>(x - a)(x + b)</code>.</li>
+            <li><strong>Paso 2:</strong> Multiplicar en cruz (o amplificar cada fracción) respetando los signos, especialmente si hay una <strong>resta</strong> delante de la segunda fracción.</li>
+            <li><strong>Paso 3:</strong> Aplicar propiedad distributiva en el numerador y reducir términos semejantes.</li>
+          </ul>
+        </div>
+        <div class="example-box">
+          <strong>✏️ Ejemplo Resuelto Paso a Paso:</strong><br>
+          Sumar <code>f(x) = 1 / (x - 1)</code> y <code>g(x) = 2 / (x + 2)</code>:<br>
+          <span class="frac"><span>1</span><span>x - 1</span></span> + <span class="frac"><span>2</span><span>x + 2</span></span> = 
+          <span class="frac"><span>1·(x + 2) + 2·(x - 1)</span><span>(x - 1)(x + 2)</span></span> = 
+          <span class="frac"><span>x + 2 + 2x - 2</span><span>(x - 1)(x + 2)</span></span> = 
+          <span class="frac"><span><strong>3x</strong></span><span><strong>(x - 1)(x + 2)</strong></span></span>
+        </div>
+      `,
+      pregunta: "Comprobación Clase 4: ¿Cuál es el resultado simplificado de sumar f(x) = 3/(x - 2) + g(x) = 1/(x + 2)?",
+      opciones: [
+        "h(x) = 4 / (x² - 4)",
+        "h(x) = (4x + 4) / (x² - 4)",
+        "h(x) = (4x + 8) / (x² - 4)"
+      ],
+      correcta: 1,
+      explicacion: "¡Correcto! [3(x + 2) + 1(x - 2)] / [(x - 2)(x + 2)] = (3x + 6 + x - 2) / (x² - 4) = (4x + 4) / (x² - 4)."
+    },
+    {
+      titulo: "Tema 5: Funciones Trigonométricas (Seno y Coseno) — Amplitud, Periodo y Máximos",
+      indicador: "Ref. I.M.5.3.26.",
+      teoria: `
+        <div class="theory-box">
+          <h4>Elementos Clave de las Ondas Sinusoidales: f(x) = A·sen(Bx) y f(x) = A·cos(Bx)</h4>
+          <ul>
+            <li><strong>Amplitud (|A|):</strong> Es la distancia vertical desde el eje central (y = 0) hasta la cresta más alta o el valle más bajo.</li>
+            <li><strong>Valor Máximo y Mínimo:</strong> Si no hay desplazamiento vertical, <strong>Máximo = +|A|</strong> y <strong>Mínimo = -|A|</strong>.</li>
+            <li><strong>Recorrido (Rango):</strong> El intervalo cerrado <strong>[-|A|, +|A|]</strong>.</li>
+            <li><strong>Periodo (T):</strong> Es la longitud en radianes que tarda la onda en completar un ciclo completo:
+              <br><code>T = 2π / |B|</code>. (Cuando B = 1, como en <code>3·sen(x)</code> o <code>2·cos(x)</code>, el periodo es <strong>T = 2π rad</strong>).
+            </li>
+          </ul>
+        </div>
+        <div class="canvas-wrapper">
+          <canvas id="canvas-clase-4" width="560" height="260"></canvas>
+          <div class="sim-controls">
+            <label><strong>Simulador Trigonométrico:</strong></label>
+            <select id="simTrigType" onchange="actualizarSimuladorTrig()">
+              <option value="sin">Seno: f(x) = A·sen(Bx)</option>
+              <option value="cos">Coseno: f(x) = A·cos(Bx)</option>
+            </select>
+            <label>Amplitud A: <strong id="valTrigAmp">3</strong>
+              <input type="range" id="simTrigAmp" min="1" max="4" value="3" oninput="actualizarSimuladorTrig()" />
+            </label>
+            <label>Frecuencia B: <strong id="valTrigFreq">1</strong>
+              <input type="range" id="simTrigFreq" min="1" max="2" value="1" oninput="actualizarSimuladorTrig()" />
+            </label>
+          </div>
+        </div>
+      `,
+      pregunta: "Comprobación Clase 5: Para la función f(x) = 4·sen(x) en el intervalo [0, 2π], ¿cuáles son su Amplitud, Valor Máximo y Periodo?",
+      opciones: [
+        "Amplitud = 4; Valor Máximo = 4; Periodo T = 2π rad.",
+        "Amplitud = 8; Valor Máximo = 4; Periodo T = π rad.",
+        "Amplitud = 4; Valor Máximo = 1; Periodo T = 4π rad."
+      ],
+      correcta: 0,
+      explicacion: "¡Exacto! El coeficiente A = 4 determina tanto la amplitud (4) como el valor máximo (4), y como B = 1, su periodo es T = 2π rad."
+    }
+  ];
+
+  let claseActualIdx = 0;
+
+  function mostrarClase(idx) {
+    claseActualIdx = idx;
+    document.querySelectorAll(".lesson-tab").forEach((btn, i) => {
+      btn.classList.toggle("active", i === idx);
+      btn.classList.toggle("completed", state.clasesVerificadas[i]);
+    });
+
+    const c = clasesData[idx];
+    const verificada = state.clasesVerificadas[idx];
+    const cont = document.getElementById("lesson-content");
+
+    cont.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:0.6rem;">
+        <h3 class="topic-title" style="margin:0;">${c.titulo}</h3>
+        <span style="font-size:0.8rem; background:#e2e8f0; padding:0.2rem 0.6rem; border-radius:4px; font-weight:600;">${c.indicador}</span>
+      </div>
+      ${c.teoria}
+      <div class="question-block" style="background:#f8fafc; border-color:#cbd5e1;">
+        <span class="q-badge">Micro-Verificación de la Clase ${idx + 1}</span>
+        <p style="font-weight:600;">${c.pregunta}</p>
+        <div class="options-list">
+          ${c.opciones.map((op, i) => `
+            <label class="option-label ${verificada && i === c.correcta ? 'option-correct' : ''}">
+              <input type="radio" name="micro_q_${idx}" value="${i}" ${verificada && i === c.correcta ? 'checked' : ''} />
+              <span>${op}</span>
+            </label>
+          `).join("")}
+        </div>
+        <div style="margin-top:0.85rem; display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="verificarMicroPregunta(${idx})">Verificar Comprensión</button>
+          ${idx < 4 ? `<button class="btn btn-outline" onclick="mostrarClase(${idx + 1})">Siguiente Tema →</button>` : ""}
+        </div>
+        <div id="micro-feedback-${idx}" style="margin-top:0.75rem;">
+          ${verificada ? `<div class="alert alert-success">${c.explicacion}</div>` : ""}
+        </div>
+      </div>
+    `;
+
+    // Dibujar gráficos correspondientes a la clase abierta
+    if (idx === 0) drawParabolaHorizontalTest("canvas-clase-0");
+    if (idx === 1) actualizarSimuladorAsintotas();
+    if (idx === 4) actualizarSimuladorTrig();
+    actualizarContadorClases();
+  }
+
+  function actualizarSimuladorAsintotas() {
+    const a = parseInt(document.getElementById("sliderAsymp").value);
+    document.getElementById("valAsymp").textContent = a;
+    drawRationalGraph("canvas-clase-1", {
+      xMin: -6, xMax: 6, yMin: -6, yMax: 6,
+      fn: x => (2 * x + 1) / (x * x - a * a),
+      vAsymptotes: [-a, a],
+      hAsymptote: 0,
+      labelFn: `(2x+1)/(x²-${a * a})`
+    });
+  }
+
+  function actualizarSimuladorTrig() {
+    const type = document.getElementById("simTrigType").value;
+    const amp = parseInt(document.getElementById("simTrigAmp").value);
+    const freq = parseInt(document.getElementById("simTrigFreq").value);
+    document.getElementById("valTrigAmp").textContent = amp;
+    document.getElementById("valTrigFreq").textContent = freq;
+    drawTrigGraph("canvas-clase-4", { amp, freq, type, yMax: 5 });
+  }
+
+  function verificarMicroPregunta(idx) {
+    const sel = document.querySelector(`input[name="micro_q_${idx}"]:checked`);
+    const fb = document.getElementById(`micro-feedback-${idx}`);
+    if (!sel) {
+      fb.innerHTML = `<div class="alert alert-warning">Selecciona una opción antes de verificar.</div>`;
+      return;
+    }
+    const val = parseInt(sel.value);
+    if (val === clasesData[idx].correcta) {
+      state.clasesVerificadas[idx] = true;
+      document.getElementById(`tab-${idx}`).classList.add("completed");
+      fb.innerHTML = `<div class="alert alert-success">${clasesData[idx].explicacion}</div>`;
+      actualizarContadorClases();
+    } else {
+      fb.innerHTML = `<div class="alert alert-danger">❌ Respuesta incorrecta. Revisa la explicación teórica arriba e inténtalo nuevamente.</div>`;
+    }
+  }
+
+  function actualizarContadorClases() {
+    const total = state.clasesVerificadas.filter(Boolean).length;
+    document.getElementById("progreso-clases-txt").textContent = `Progreso de clases: ${total} / 5 verificadas`;
+  }
+
+  function irATarea() {
+    const total = state.clasesVerificadas.filter(Boolean).length;
+    if (total < 5) {
+      alert(`Has verificado ${total} de 5 temas. Completa la micro-verificación de las 5 clases antes de pasar a la Tarea.`);
+      return;
+    }
+    activarFase(2);
+  }
+
+  function volverAClases() {
+    activarFase(1);
+  }
+
+  /* ============================================================================
+     FASE 2: TAREA DE REFUERZO (5 PREGUNTAS INÉDITAS CON GRÁFICOS)
+     ============================================================================ */
+  const tareaPreguntas = [
+    {
+      tema: "Tema 1: Operaciones y Clasificación (Ref. I.M.5.3.1.)",
+      enunciado: "Dadas las funciones reales f(x) = 3x - 4 y g(x) = 2x + 7, determine la función resta (f - g)(x) y su clasificación en ℝ → ℝ:",
+      opciones: [
+        "(f - g)(x) = x - 11; es una función biyectiva en ℝ.",
+        "(f - g)(x) = x + 3; no es inyectiva.",
+        "(f - g)(x) = 5x + 3; es constante.",
+        "(f - g)(x) = x - 11; no es sobreyectiva."
+      ],
+      correcta: 0,
+      solucion: "(f - g)(x) = (3x - 4) - (2x + 7) = 3x - 4 - 2x - 7 = x - 11. Toda función lineal no horizontal en ℝ es inyectiva y sobreyectiva (biyectiva)."
+    },
+    {
+      tema: "Tema 2: Análisis de Asíntotas (Ref. I.M.5.3.3.)",
+      enunciado: "Observe la gráfica de la función racional f(x) = (2x² + 1) / (x² - 1). Determine las ecuaciones de sus asíntotas verticales y su asíntota horizontal:",
+      canvasId: "canvas-tarea-1",
+      opciones: [
+        "Asíntotas verticales: x = -1 y x = 1; Asíntota horizontal: y = 0.",
+        "Asíntotas verticales: x = -1 y x = 1; Asíntota horizontal: y = 2.",
+        "Asíntota vertical: x = 2; Asíntota horizontal: y = 1.",
+        "Sin asíntotas verticales; Asíntota horizontal: y = 2."
+      ],
+      correcta: 1,
+      solucion: "Denominador: x² - 1 = 0 ⇒ x = ±1 (asíntotas verticales). Como el grado del numerador (2) es igual al del denominador (2), la asíntota horizontal es y = 2/1 = 2."
+    },
+    {
+      tema: "Tema 3: Fracciones Parciales (Ref. I.M.5.3.3.)",
+      enunciado: "Al descomponer en fracciones parciales la expresión (7x - 2) / [(x - 2)(x + 1)] = A/(x - 2) + B/(x + 1), los valores de A y B son:",
+      opciones: [
+        "A = 3 y B = 4",
+        "A = 4 y B = 3",
+        "A = -4 y B = 3",
+        "A = 7 y B = -2"
+      ],
+      correcta: 1,
+      solucion: "7x - 2 = A(x + 1) + B(x - 2). Con x = 2: 12 = 3A ⇒ A = 4. Con x = -1: -9 = -3B ⇒ B = 3."
+    },
+    {
+      tema: "Tema 4: Resta y Simplificación Racional (Ref. I.M.5.3.3.)",
+      enunciado: "Efectúe la resta algebraica h(x) = 4/(x + 1) - 2/(x - 1) y simplifique el resultado:",
+      opciones: [
+        "h(x) = (2x - 6) / (x² - 1)",
+        "h(x) = (2x - 2) / (x² - 1)",
+        "h(x) = (6x - 2) / (x² - 1)",
+        "h(x) = 2 / (x² - 1)"
+      ],
+      correcta: 0,
+      solucion: "[4(x - 1) - 2(x + 1)] / [(x + 1)(x - 1)] = (4x - 4 - 2x - 2) / (x² - 1) = (2x - 6) / (x² - 1)."
+    },
+    {
+      tema: "Tema 5: Función Coseno y Recorrido (Ref. I.M.5.3.26.)",
+      enunciado: "Observe la gráfica de f(x) = 5·cos(x) en [0, 2π]. Identifique su amplitud, valor mínimo y recorrido:",
+      canvasId: "canvas-tarea-4",
+      opciones: [
+        "Amplitud = 5; Valor Mínimo = -5; Recorrido = [-5, 5].",
+        "Amplitud = 10; Valor Mínimo = -5; Recorrido = [0, 5].",
+        "Amplitud = 5; Valor Mínimo = 0; Recorrido = [-5, 5].",
+        "Amplitud = 2.5; Valor Mínimo = -2.5; Recorrido = [-2.5, 2.5]."
+      ],
+      correcta: 0,
+      solucion: "En f(x) = 5·cos(x), la amplitud es |5| = 5, su punto más bajo en x = π es -5, y el recorrido es [-5, 5]."
+    }
+  ];
+
+  function renderizarTarea() {
+    const cont = document.getElementById("tarea-container");
+    cont.innerHTML = tareaPreguntas.map((q, idx) => `
+      <div class="question-block" id="tarea-block-${idx}">
+        <span class="q-badge">Ejercicio de Tarea ${idx + 1} / 5 — ${q.tema}</span>
+        <p style="font-weight:600; margin-top:0.3rem;">${q.enunciado}</p>
+        ${q.canvasId ? `<div class="canvas-wrapper"><canvas id="${q.canvasId}" width="540" height="250"></canvas></div>` : ""}
+        <div class="options-list">
+          ${q.opciones.map((op, i) => `
+            <label class="option-label" id="tarea-opt-${idx}-${i}">
+              <input type="radio" name="tarea_q_${idx}" value="${i}" />
+              <span>${op}</span>
+            </label>
+          `).join("")}
+        </div>
+        <div id="tarea-fb-${idx}" style="margin-top:0.65rem;"></div>
+      </div>
+    `).join("");
+
+    // Dibujar gráficos de la tarea
+    drawRationalGraph("canvas-tarea-1", {
+      xMin: -5, xMax: 5, yMin: -6, yMax: 8,
+      fn: x => (2 * x * x + 1) / (x * x - 1),
+      vAsymptotes: [-1, 1],
+      hAsymptote: 2,
+      labelFn: "(2x²+1)/(x²-1)"
+    });
+    drawTrigGraph("canvas-tarea-4", { amp: 5, freq: 1, type: "cos", yMax: 6 });
+  }
+
+  function calificarTarea() {
+    let aciertos = 0;
+    for (let i = 0; i < tareaPreguntas.length; i++) {
+      const sel = document.querySelector(`input[name="tarea_q_${i}"]:checked`);
+      if (!sel) {
+        alert(`Por favor responde el Ejercicio de Tarea #${i + 1} antes de calificar.`);
+        return;
+      }
+    }
+
+    tareaPreguntas.forEach((q, idx) => {
+      const selVal = parseInt(document.querySelector(`input[name="tarea_q_${idx}"]:checked`).value);
+      const fb = document.getElementById(`tarea-fb-${idx}`);
+      document.querySelectorAll(`input[name="tarea_q_${idx}"]`).forEach(inp => inp.disabled = true);
+
+      if (selVal === q.correcta) {
+        aciertos++;
+        document.getElementById(`tarea-opt-${idx}-${selVal}`).classList.add("option-correct");
+        fb.innerHTML = `<div class="alert alert-success">✅ <strong>¡Correcto!</strong> ${q.solucion}</div>`;
+      } else {
+        document.getElementById(`tarea-opt-${idx}-${selVal}`).classList.add("option-wrong");
+        document.getElementById(`tarea-opt-${idx}-${q.correcta}`).classList.add("option-correct");
+        fb.innerHTML = `<div class="alert alert-danger">❌ <strong>Incorrecto.</strong> ${q.solucion}</div>`;
+      }
+    });
+
+    state.notaTarea = aciertos * 2; // Escala sobre 10
+    state.tareaCompletada = true;
+
+    document.getElementById("tarea-resultado").innerHTML = `
+      <div class="alert alert-info">
+        <strong>📋 Resultado de la Tarea de Refuerzo:</strong> Obtuviste <strong>${aciertos} / 5 aciertos</strong> (Equivalente a <strong>${state.notaTarea.toFixed(2)} / 10.00</strong>).<br>
+        Revisa las soluciones detalladas arriba y presiona el botón verde para rendir tu <strong>Evaluación Final de Recuperación (10 preguntas)</strong>.
+      </div>
+    `;
+    document.getElementById("btn-calificar-tarea").classList.add("hidden");
+    document.getElementById("btn-ir-examen").classList.remove("hidden");
+  }
+
+  function irAExamen() {
+    activarFase(3);
+  }
+
+  /* ============================================================================
+     FASE 3: EVALUACIÓN FINAL DE RECUPERACIÓN (10 PREGUNTAS DE OPCIÓN MÚLTIPLE)
+     ============================================================================ */
+  const examenPreguntas = [
+    {
+      indicador: "I.M.5.3.1. — Clasificación de Funciones",
+      enunciado: "1. Observe la gráfica de la función cuadrática f(x) = x² - 2 y la recta horizontal y = 2. Al aplicar el criterio de la recta horizontal se concluye que:",
+      canvasId: "canvas-ex-0",
+      opciones: [
+        "A) Es una función biyectiva en todos los números reales ℝ.",
+        "B) No es inyectiva, porque la recta horizontal corta a la curva en dos puntos distintos: (-2, 2) y (2, 2).",
+        "C) Es inyectiva, porque cada elemento del dominio tiene una única imagen.",
+        "D) No corresponde a una función real."
+      ],
+      correcta: 1,
+      explicacion: "Como la recta horizontal y = 2 interseca a la parábola en dos puntos (-2, 2) y (2, 2), dos valores distintos de x tienen la misma imagen, por lo que NO es inyectiva."
+    },
+    {
+      indicador: "I.M.5.3.1. — Operaciones con Funciones",
+      enunciado: "2. Sean las funciones reales f(x) = 4x² - 3x + 5 y g(x) = x² + 5x - 2. Al realizar la operación resta (f - g)(x), la expresión resultante es:",
+      opciones: [
+        "A) (f - g)(x) = 3x² - 8x + 7",
+        "B) (f - g)(x) = 3x² + 2x + 3",
+        "C) (f - g)(x) = 5x² - 8x + 7",
+        "D) (f - g)(x) = 3x² - 8x + 3"
+      ],
+      correcta: 0,
+      explicacion: "(4x² - 3x + 5) - (x² + 5x - 2) = 4x² - 3x + 5 - x² - 5x + 2 = 3x² - 8x + 7."
+    },
+    {
+      indicador: "I.M.5.3.3. — Asíntotas de Función Racional",
+      enunciado: "3. Analice la gráfica y la expresión de f(x) = (x + 2) / (x² - 25). ¿Cuáles son las ecuaciones de sus asíntotas verticales y su asíntota horizontal?",
+      canvasId: "canvas-ex-2",
+      opciones: [
+        "A) Asíntotas verticales: x = -25 y x = 25; Asíntota horizontal: y = 1.",
+        "B) Asíntota vertical: x = -2; Asíntota horizontal: y = 5.",
+        "C) Asíntotas verticales: x = -5 y x = 5; Asíntota horizontal: y = 0.",
+        "D) Asíntotas verticales: x = -5 y x = 5; Asíntota horizontal: y = 2."
+      ],
+      correcta: 2,
+      explicacion: "x² - 25 = 0 ⇒ x = ±5 (asíntotas verticales). Como el grado del numerador (1) es menor que el del denominador (2), la asíntota horizontal es y = 0."
+    },
+    {
+      indicador: "I.M.5.3.3. — Asíntotas con Grados Iguales",
+      enunciado: "4. Dada la función racional f(x) = (3x - 1) / (x - 2) representada en la gráfica, sus ecuaciones de asíntota vertical y asíntota horizontal son:",
+      canvasId: "canvas-ex-3",
+      opciones: [
+        "A) Asíntota vertical: x = 2; Asíntota horizontal: y = 3.",
+        "B) Asíntota vertical: x = -2; Asíntota horizontal: y = 0.",
+        "C) Asíntota vertical: x = 3; Asíntota horizontal: y = 2.",
+        "D) Asíntota vertical: x = 2; Asíntota horizontal: y = -1."
+      ],
+      correcta: 0,
+      explicacion: "Denominador x - 2 = 0 ⇒ x = 2 (asíntota vertical). Como numerador y denominador tienen grado 1, la asíntota horizontal es y = 3/1 = 3."
+    },
+    {
+      indicador: "I.M.5.3.3. — Fracciones Parciales",
+      enunciado: "5. Al descomponer en fracciones parciales la función g(x) = (6x + 2) / [(x - 1)(x + 3)] = A/(x - 1) + B/(x + 3), los valores de las constantes A y B son:",
+      opciones: [
+        "A) A = 4 y B = 2",
+        "B) A = 3 y B = 3",
+        "C) A = -2 y B = 4",
+        "D) A = 2 y B = 4"
+      ],
+      correcta: 3,
+      explicacion: "6x + 2 = A(x + 3) + B(x - 1). Si x = 1: 8 = 4A ⇒ A = 2. Si x = -3: -16 = -4B ⇒ B = 4."
+    },
+    {
+      indicador: "I.M.5.3.3. — Fracciones Parciales",
+      enunciado: "6. Determine los valores de A y B que satisfacen la descomposición en fracciones parciales: (4x - 11) / [(x - 2)(x - 3)] = A/(x - 2) + B/(x - 3):",
+      opciones: [
+        "A) A = 1 y B = 3",
+        "B) A = 3 y B = 1",
+        "C) A = -3 y B = 1",
+        "D) A = 4 y B = -11"
+      ],
+      correcta: 1,
+      explicacion: "4x - 11 = A(x - 3) + B(x - 2). Si x = 2: -3 = -A ⇒ A = 3. Si x = 3: 1 = B ⇒ B = 1."
+    },
+    {
+      indicador: "I.M.5.3.3. — Suma de Funciones Racionales",
+      enunciado: "7. Dadas f(x) = 3/(x - 2) y g(x) = 2/(x + 3), al efectuar la suma h(x) = f(x) + g(x) y reducir a un denominador común se obtiene:",
+      opciones: [
+        "A) h(x) = (5x + 13) / [(x - 2)(x + 3)]",
+        "B) h(x) = 5 / (2x + 1)",
+        "C) h(x) = (5x + 5) / [(x - 2)(x + 3)]",
+        "D) h(x) = (x + 5) / [(x - 2)(x + 3)]"
+      ],
+      correcta: 2,
+      explicacion: "[3(x + 3) + 2(x - 2)] / [(x - 2)(x + 3)] = (3x + 9 + 2x - 4) / [(x - 2)(x + 3)] = (5x + 5) / [(x - 2)(x + 3)]."
+    },
+    {
+      indicador: "I.M.5.3.3. — Resta de Funciones Racionales",
+      enunciado: "8. Al resolver y simplificar la resta de funciones racionales h(x) = 5/(x + 2) - 2/(x - 1), la fracción equivalente es:",
+      opciones: [
+        "A) h(x) = (3x - 9) / [(x + 2)(x - 1)]",
+        "B) h(x) = (3x - 1) / [(x + 2)(x - 1)]",
+        "C) h(x) = (7x - 9) / [(x + 2)(x - 1)]",
+        "D) h(x) = (3x + 9) / [(x + 2)(x - 1)]"
+      ],
+      correcta: 0,
+      explicacion: "[5(x - 1) - 2(x + 2)] / [(x + 2)(x - 1)] = (5x - 5 - 2x - 4) / [(x + 2)(x - 1)] = (3x - 9) / [(x + 2)(x - 1)]."
+    },
+    {
+      indicador: "I.M.5.3.26. — Función Trigonométrica Seno",
+      enunciado: "9. Observe la gráfica de la función f(x) = 4·sen(2x) en el intervalo [0, 2π]. Identifique su amplitud (A), valor máximo y periodo (T):",
+      canvasId: "canvas-ex-8",
+      opciones: [
+        "A) Amplitud = 4; Valor Máximo = 4; Periodo T = 2π rad.",
+        "B) Amplitud = 2; Valor Máximo = 4; Periodo T = 4π rad.",
+        "C) Amplitud = 8; Valor Máximo = 4; Periodo T = π rad.",
+        "D) Amplitud = 4; Valor Máximo = 4; Periodo T = π rad."
+      ],
+      correcta: 3,
+      explicacion: "La amplitud es |4| = 4, su valor máximo es 4 y su periodo es T = 2π / 2 = π rad (completa dos ciclos en 2π)."
+    },
+    {
+      indicador: "I.M.5.3.26. — Función Trigonométrica Coseno",
+      enunciado: "10. A partir de la lectura de la gráfica de f(x) = 3·cos(x) en [0, 2π], determine su recorrido (rango) y su periodo (T):",
+      canvasId: "canvas-ex-9",
+      opciones: [
+        "A) Recorrido: [0, 3]; Periodo: T = π rad.",
+        "B) Recorrido: [-3, 3]; Periodo: T = 2π rad.",
+        "C) Recorrido: [-3, 3]; Periodo: T = π rad.",
+        "D) Recorrido: (-∞, +∞); Periodo: T = 2π rad."
+      ],
+      correcta: 1,
+      explicacion: "La onda oscila entre y = -3 y y = +3 (recorrido [-3, 3]) y completa un ciclo en T = 2π rad."
+    }
+  ];
+
+  function renderizarExamen() {
+    const cont = document.getElementById("examen-container");
+    cont.innerHTML = examenPreguntas.map((q, idx) => `
+      <div class="question-block" id="ex-block-${idx}">
+        <span class="q-badge">Pregunta ${idx + 1} de 10 | ${q.indicador}</span>
+        <p style="font-weight:600; font-size:1.02rem; margin-top:0.35rem;">${q.enunciado}</p>
+        ${q.canvasId ? `<div class="canvas-wrapper"><canvas id="${q.canvasId}" width="550" height="255"></canvas></div>` : ""}
+        <div class="options-list">
+          ${q.opciones.map((op, i) => `
+            <label class="option-label" id="ex-opt-${idx}-${i}">
+              <input type="radio" name="ex_q_${idx}" value="${i}" />
+              <span>${op}</span>
+            </label>
+          `).join("")}
+        </div>
+        <div id="ex-fb-${idx}" style="margin-top:0.65rem;"></div>
+      </div>
+    `).join("");
+
+    // Renderizar todos los gráficos del examen final
+    drawParabolaHorizontalTest("canvas-ex-0");
+
+    drawRationalGraph("canvas-ex-2", {
+      xMin: -8, xMax: 8, yMin: -6, yMax: 6,
+      fn: x => (x + 2) / (x * x - 25),
+      vAsymptotes: [-5, 5],
+      hAsymptote: 0,
+      labelFn: "(x+2)/(x²-25)"
+    });
+
+    drawRationalGraph("canvas-ex-3", {
+      xMin: -5, xMax: 8, yMin: -5, yMax: 10,
+      fn: x => (3 * x - 1) / (x - 2),
+      vAsymptotes: [2],
+      hAsymptote: 3,
+      labelFn: "(3x-1)/(x-2)"
+    });
+
+    drawTrigGraph("canvas-ex-8", { amp: 4, freq: 2, type: "sin", yMax: 5 });
+    drawTrigGraph("canvas-ex-9", { amp: 3, freq: 1, type: "cos", yMax: 4 });
+  }
+
+  async function finalizarYEnviarExamen() {
+    if (state.examenEnviado) return;
+
+    // Validar que todas las 10 preguntas estén respondidas
+    const respuestasUsuario = [];
+    for (let i = 0; i < examenPreguntas.length; i++) {
+      const sel = document.querySelector(`input[name="ex_q_${i}"]:checked`);
+      if (!sel) {
+        alert(`⚠️ Te falta responder la Pregunta #${i + 1}. Por favor completa las 10 preguntas antes de enviar.`);
+        document.getElementById(`ex-block-${i}`).scrollIntoView({ behavior: "smooth" });
+        return;
+      }
+      respuestasUsuario.push(parseInt(sel.value));
+    }
+
+    let aciertos = 0;
+    const detalleRespuestas = [];
+
+    examenPreguntas.forEach((q, idx) => {
+      const userVal = respuestasUsuario[idx];
+      const fb = document.getElementById(`ex-fb-${idx}`);
+      document.querySelectorAll(`input[name="ex_q_${idx}"]`).forEach(inp => inp.disabled = true);
+
+      const letraUser = ["A", "B", "C", "D"][userVal];
+      const letraCorr = ["A", "B", "C", "D"][q.correcta];
+
+      if (userVal === q.correcta) {
+        aciertos++;
+        detalleRespuestas.push(`P${idx + 1}:${letraUser}(OK)`);
+        document.getElementById(`ex-opt-${idx}-${userVal}`).classList.add("option-correct");
+        fb.innerHTML = `<div class="alert alert-success">✅ <strong>Correcto (+1 punto).</strong> ${q.explicacion}</div>`;
+      } else {
+        detalleRespuestas.push(`P${idx + 1}:${letraUser}(Err:${letraCorr})`);
+        document.getElementById(`ex-opt-${idx}-${userVal}`).classList.add("option-wrong");
+        document.getElementById(`ex-opt-${idx}-${q.correcta}`).classList.add("option-correct");
+        fb.innerHTML = `<div class="alert alert-danger">❌ <strong>Incorrecto (0 puntos).</strong> ${q.explicacion}</div>`;
+      }
+    });
+
+    state.notaExamen = aciertos * 1.0;
+    state.examenEnviado = true;
+    document.getElementById("btn-enviar-examen").classList.add("hidden");
+    document.getElementById("pill-3").classList.remove("active");
+    document.getElementById("pill-3").classList.add("done");
+
+    const aprobado = state.notaExamen >= 7.0;
+    const estadoTexto = state.modoPractica
+      ? "MODO PRÁCTICA (YA APROBADO)"
+      : (aprobado ? "APROBADO RECUPERACIÓN" : "NO ALCANZÓ 7.00 PUNTOS");
+
+    const payload = {
+      fecha: new Date().toLocaleString("es-EC"),
+      estudiante: state.nombre,
+      paralelo: state.paralelo,
+      notaOriginal: state.notaOriginal.toFixed(2),
+      notaTarea: state.notaTarea.toFixed(2),
+      notaRecuperacion: state.notaExamen.toFixed(2),
+      aciertos: `${aciertos} / 10`,
+      estado: estadoTexto,
+      detalle: detalleRespuestas.join(" | ")
+    };
+
+    // Guardar respaldo local por seguridad
+    localStorage.setItem("ultimo_comprobante_recuperacion", JSON.stringify(payload));
+
+    // Mostrar reporte inmediatamente
+    const reporteDiv = document.getElementById("examen-reporte");
+    reporteDiv.classList.remove("hidden");
+    reporteDiv.innerHTML = `
+      <div class="score-banner" style="background:${aprobado ? 'var(--success-bg)' : 'var(--warning-bg)'}; border:2px solid ${aprobado ? 'var(--success)' : 'var(--warning)'};">
+        <div style="font-weight:700; text-transform:uppercase; font-size:0.9rem; color:${aprobado ? 'var(--success)' : 'var(--warning)'};">
+          COMPROBANTE OFICIAL DE RECUPERACIÓN — II TRIMESTRE
+        </div>
+        <div class="score-big" style="color:${aprobado ? 'var(--success)' : 'var(--danger)'}; margin:0.5rem 0;">
+          ${state.notaExamen.toFixed(2)} / 10.00
+        </div>
+        <p style="font-size:1.05rem; font-weight:600;">Estudiante: ${payload.estudiante} (${payload.paralelo})</p>
+        <p>Nota Examen Original: <strong>${payload.notaOriginal}</strong> | Nota Tarea: <strong>${payload.notaTarea}</strong> | Aciertos Finales: <strong>${payload.aciertos}</strong></p>
+        <p style="margin-top:0.4rem; font-weight:700;">Estado: ${estadoTexto}</p>
+        <div id="drive-sync-status" style="margin-top:1rem; font-size:0.92rem; font-weight:600;">
+          ⏳ Enviando calificación a la hoja de Excel de Google Drive del docente...
+        </div>
+        <div style="margin-top:1rem;" class="no-print">
+          <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir / Guardar Comprobante PDF</button>
+        </div>
+      </div>
+    `;
+
+    reporteDiv.scrollIntoView({ behavior: "smooth" });
+
+    // Enviar datos a Google Sheets (Excel de Drive)
+    await enviarAGoogleDrive(payload);
+  }
+
+  async function enviarAGoogleDrive(payload) {
+    const statusEl = document.getElementById("drive-sync-status");
+    const url = getGoogleScriptUrl();
+
+    try {
+      await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      statusEl.innerHTML = `<span style="color:var(--success);">✅ ¡Calificación enviada exitosamente a la hoja de Excel en Google Drive de Msc. Edwin Lliguipuma E.!</span>`;
+    } catch (error) {
+      statusEl.innerHTML = `<span style="color:var(--danger);">❌ Error de red al conectar con Google Drive. Guarda o imprime este comprobante en PDF y entrégalo al docente.</span>`;
+    }
+  }
+
+  /* ============================================================================
+     PANEL DE CONFIGURACIÓN DOCENTE (VINCULAR URL DE GOOGLE DRIVE)
+     ============================================================================ */
+  function abrirConfigDocente() {
+    const pin = prompt("Ingrese el PIN de acceso docente (Por defecto: 2026):");
+    if (pin !== "2026") {
+      if (pin !== null) alert("PIN incorrecto.");
+      return;
+    }
+    document.getElementById("inputScriptUrl").value = getGoogleScriptUrl();
+    document.getElementById("modal-docente").classList.remove("hidden");
+  }
+
+  function cerrarConfigDocente() {
+    document.getElementById("modal-docente").classList.add("hidden");
+  }
+
+  function guardarUrlDrive() {
+    const val = document.getElementById("inputScriptUrl").value.trim();
+    if (!val.startsWith("https://script.google.com/")) {
+      alert("Por favor ingresa una URL válida de Google Apps Script (debe empezar con https://script.google.com/).");
+      return;
+    }
+    localStorage.setItem("edwin_math_script_url", val);
+    document.getElementById("test-drive-status").innerHTML = `<span style="color:var(--success); font-weight:600;">✅ URL actualizada y guardada correctamente.</span>`;
+  }
+
+  async function probarConexionDrive() {
+    const val = document.getElementById("inputScriptUrl").value.trim();
+    const status = document.getElementById("test-drive-status");
+    if (!val.startsWith("https://script.google.com/")) {
+      status.innerHTML = `<span style="color:var(--danger);">Ingresa primero una URL válida de Google Apps Script.</span>`;
+      return;
+    }
+    status.innerHTML = "⏳ Enviando fila de prueba a Google Drive...";
+    try {
+      await fetch(val, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          fecha: new Date().toLocaleString("es-EC"),
+          estudiante: "PRUEBA DE CONEXIÓN DOCENTE",
+          paralelo: "2do BGU - Sistema",
+          notaOriginal: "5.00",
+          notaTarea: "10.00",
+          notaRecuperacion: "9.00",
+          aciertos: "9 / 10",
+          estado: "PRUEBA EXITOSA",
+          detalle: "Verificación de enlace Drive"
+        })
+      });
+      status.innerHTML = `<span style="color:var(--success); font-weight:600;">✅ Señal enviada. Revisa tu Hoja de Cálculo en Google Drive; debe haber aparecido una fila llamada "PRUEBA DE CONEXIÓN DOCENTE".</span>`;
+    } catch (e) {
+      status.innerHTML = `<span style="color:var(--danger);">❌ No se pudo conectar. Verifica los permisos de implementación ("Cualquier persona").</span>`;
+    }
+  }
+</script>
+</body>
+</html>
