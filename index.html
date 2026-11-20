@@ -555,12 +555,12 @@
       <h2 class="section-title" style="border:none; margin:0;">4. Evaluación Final de Recuperación (10 Preguntas)</h2>
       <span style="background:#fef3c7; color:#92400e; font-weight:700; padding:0.35rem 0.8rem; border-radius:8px; font-size:0.88rem;">Valor: 1 punto c/u (Total: 10 pts)</span>
     </div>
-    <p style="margin-bottom:1.2rem; color:var(--muted);">Selecciona la alternativa correcta en cada una de las 10 preguntas. Al finalizar, tu nota se enviará automáticamente a la hoja de cálculo de Google Drive del docente.</p>
+    <p style="margin-bottom:1.2rem; color:var(--muted);">Selecciona la alternativa correcta en cada una de las 10 preguntas. Al finalizar, tu nota se enviará automáticamente a la Plataforma Matemática BGU y a Google Drive.</p>
 
     <div id="examen-container"></div>
 
     <div style="margin-top:1.5rem; text-align:center;" class="no-print">
-      <button class="btn btn-success" style="font-size:1.05rem; padding:0.85rem 2rem;" id="btn-enviar-examen" onclick="finalizarYEnviarExamen()">✅ Finalizar Evaluación y Enviar Nota a Drive</button>
+      <button class="btn btn-success" style="font-size:1.05rem; padding:0.85rem 2rem;" id="btn-enviar-examen" onclick="finalizarYEnviarExamen()">✅ Finalizar Evaluación y Enviar Nota</button>
     </div>
 
     <!-- REPORTE FINAL Y COMPROBANTE -->
@@ -591,10 +591,46 @@
 <script>
   /**
    * ============================================================================
-   * URL VINCULADA A LA HOJA DE RESPUESTAS EN GOOGLE DRIVE (Msc. Edwin Lliguipuma)
+   * URL VINCULADA A LA PLATAFORMA BGU (RENDER) Y GOOGLE DRIVE
    * ============================================================================
    */
   const DEFAULT_GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGvxVxJcdtBUl8BEqpnTBXvRddAU1qaCWze3OueQT0-SlekolztHDSngB_gFS_wBEn/exec";
+  const PLATAFORMA_API_URL = "https://plataforma-matematicas-bgu.onrender.com";
+
+  // Leer cédula y evaluación enviadas desde la Plataforma BGU
+  const urlParams = new URLSearchParams(window.location.search);
+  const PARAM_CEDULA = (urlParams.get("cedula") || "").trim();
+  const PARAM_EVALUACION_ID = (urlParams.get("evaluacion_id") || "").trim();
+
+  async function autocompletarDesdePlataforma() {
+    if (!PARAM_CEDULA) return;
+    try {
+      const resp = await fetch(`${PLATAFORMA_API_URL}/api/estudiante/${encodeURIComponent(PARAM_CEDULA)}/`);
+      const data = await resp.json();
+      if (data.encontrado) {
+        const inputNombre = document.getElementById("estNombre");
+        const selectParalelo = document.getElementById("estParalelo");
+        if (inputNombre && !inputNombre.value) {
+          inputNombre.value = data.apellidos_nombres;
+        }
+        if (selectParalelo && data.curso) {
+          const cursoNorm = data.curso.toLowerCase().replace(/['"“”]/g, "").trim();
+          for (const opt of selectParalelo.options) {
+            const optNorm = opt.value.toLowerCase().replace(/['"“”]/g, "").trim();
+            if (optNorm && (cursoNorm.includes(optNorm) || optNorm.includes(cursoNorm))) {
+              selectParalelo.value = opt.value;
+              break;
+            }
+          }
+          if (!selectParalelo.value) {
+            const nuevaOpt = new Option(data.curso, data.curso, true, true);
+            selectParalelo.add(nuevaOpt);
+          }
+        }
+      }
+    } catch (e) {}
+  }
+  window.addEventListener("DOMContentLoaded", autocompletarDesdePlataforma);
 
   function getGoogleScriptUrl() {
     const saved = localStorage.getItem("edwin_math_script_url");
@@ -1634,7 +1670,10 @@
         <p style="font-size:1.05rem; font-weight:600;">Estudiante: ${payload.estudiante} (${payload.paralelo})</p>
         <p>Nota Examen Original: <strong>${payload.notaOriginal}</strong> | Nota Tarea: <strong>${payload.notaTarea}</strong> | Aciertos Finales: <strong>${payload.aciertos}</strong></p>
         <p style="margin-top:0.4rem; font-weight:700;">Estado: ${estadoTexto}</p>
-        <div id="drive-sync-status" style="margin-top:1rem; font-size:0.92rem; font-weight:600;">
+        <div id="plataforma-sync-status" style="margin-top:0.85rem; font-size:0.95rem; font-weight:700;">
+          ⏳ Enviando calificación directamente a la Plataforma Matemática BGU...
+        </div>
+        <div id="drive-sync-status" style="margin-top:0.5rem; font-size:0.92rem; font-weight:600;">
           ⏳ Enviando calificación a la hoja de Excel de Google Drive del docente...
         </div>
         <div style="margin-top:1rem;" class="no-print">
@@ -1645,8 +1684,39 @@
 
     reporteDiv.scrollIntoView({ behavior: "smooth" });
 
-    // Enviar datos a Google Sheets (Excel de Drive)
+    // Enviar nota directo a Django (Render) y a Google Sheets (Excel de Drive)
+    await enviarAPlataformaDjango(state.notaExamen);
     await enviarAGoogleDrive(payload);
+  }
+
+  async function enviarAPlataformaDjango(notaFinal) {
+    const platStatusEl = document.getElementById("plataforma-sync-status");
+    if (!platStatusEl) return;
+
+    if (!PARAM_CEDULA || !PARAM_EVALUACION_ID) {
+      platStatusEl.innerHTML = `<span style="color:var(--warning);">ℹ️ Nota: Para que la calificación se guarde sola en la Plataforma BGU, abre este simulador desde el botón de tu evaluación.</span>`;
+      return;
+    }
+
+    try {
+      const resp = await fetch(`${PLATAFORMA_API_URL}/api/evaluacion/guardar-nota/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cedula: PARAM_CEDULA,
+          evaluacion_id: PARAM_EVALUACION_ID,
+          nota: notaFinal
+        })
+      });
+      const data = await resp.json();
+      if (data.ok) {
+        platStatusEl.innerHTML = `<span style="color:var(--success);">✅ ¡Calificación (${data.nota.toFixed(2)} / 10) guardada automáticamente en tu Plataforma Matemática BGU para ${data.estudiante}!</span>`;
+      } else {
+        platStatusEl.innerHTML = `<span style="color:var(--danger);">⚠️ No se pudo registrar en la plataforma: ${data.error || "Error desconocido"}</span>`;
+      }
+    } catch (err) {
+      platStatusEl.innerHTML = `<span style="color:var(--danger);">⚠️ Error de conexión con la Plataforma BGU. Muestra este comprobante al docente.</span>`;
+    }
   }
 
   async function enviarAGoogleDrive(payload) {
